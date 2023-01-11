@@ -307,9 +307,28 @@ const Query = new GraphQLObjectType({
   }
 })
 
+const Mutation = new GraphQLObjectType({
+  name: 'Mutation',
+  fields: {
+    addJob: {
+      type: Job,
+      args: {
+        user_id: { type : GraphQLInt },
+        status: { type : GraphQLString }
+      },
+      resolve(root, args) {
+        return Db.models.job.create({
+          user_id: args.user_id,
+          status: args.status,
+        });
+      }
+    }
+  }
+});
+
 const Schema = new GraphQLSchema({
   query: Query,
-  // mutation: Mutation
+  mutation: Mutation
 });
 
 module.exports = Schema;
