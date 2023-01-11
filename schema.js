@@ -5,7 +5,7 @@ const {
   GraphQLBoolean,
   GraphQLSchema,
   GraphQLList,
-  GraphQLNonNull
+  GraphQLNonNull,
 } = require('graphql');
 
 const Db = require('./database');
@@ -99,7 +99,7 @@ const What = new GraphQLObjectType({
       is_temperature_sensitive: {
         type: GraphQLBoolean,
         resolve (what) {
-          return what.is_fragile;
+          return what.is_temperature_sensitive;
         }
       },
       job: {
@@ -111,6 +111,79 @@ const What = new GraphQLObjectType({
     }
   }
 })
+
+const Chat = new GraphQLObjectType({
+  name: 'Chat',
+  description: 'Chat listing',
+  fields: () => {
+    return {
+      id: {
+        type: GraphQLInt,
+        resolve (chat) {
+          return chat.id;
+        }
+      },
+      user_chat_id: {
+        type: GraphQLInt,
+        resolve (chat) {
+          return chat.user_chat_id;
+        }
+      },
+      messages: {
+        type: GraphQLList(Message),
+        resolve (chat) {
+          return chat.getMessages();
+        }
+      }
+    };
+  }
+});
+
+
+const Message = new GraphQLObjectType({
+  name: 'Message',
+  description: 'An individual message',
+  fields: () => {
+    return {
+      id: {
+        type: GraphQLInt,
+        resolve (message) {
+          return message.id;
+        }
+      },
+      chat_id: {
+        type: GraphQLInt,
+        resolve (message) {
+          return message.chat_id;
+        }
+      },
+      user_id: {
+        type: GraphQLInt,
+        resolve (message) {
+          return message.user_id;
+        }
+      },
+      date: {
+        type: GraphQLString,
+        resolve (message) {
+          return message.date;
+        }
+      },
+      message: {
+        type: GraphQLString,
+        resolve (message) {
+          return message.message;
+        }
+      },
+      chat: {
+        type: Chat,
+        resolve (message) {
+          return message.getChat()
+        }
+      }
+    };
+  }
+});
 
 const Query = new GraphQLObjectType({
   name: 'Query',
@@ -168,7 +241,44 @@ const Query = new GraphQLObjectType({
         resolve (root, args) {
           return Db.models.what.findAll({ where: args });
         }
-      }
+      },
+      chats: {
+        type: new GraphQLList(Chat),
+        args: {
+          id: {
+            type: GraphQLInt
+          },
+          user_chat_id: {
+            type: GraphQLInt
+          },
+        },
+        resolve (root, args) {
+          return Db.models.chat.findAll({ where: args });
+        }
+      },
+      messages: {
+        type: new GraphQLList(Message),
+        args: {
+          id: {
+            type: GraphQLInt
+          },
+          chat_id: {
+            type: GraphQLInt
+          },
+          user_id: {
+            type: GraphQLInt
+          },
+          date: {
+            type: GraphQLString
+          },
+          message: {
+            type: GraphQLString
+          },
+        },
+        resolve (root, args) {
+          return Db.models.message.findAll({ where: args });
+        }
+      },
     };
   }
 })
