@@ -6,7 +6,32 @@ const {
   GraphQLSchema,
   GraphQLList,
   GraphQLNonNull,
+  GraphQLScalarType 
 } = require('graphql');
+
+const Kind = require('graphql/language')
+
+const TimestampType = new GraphQLScalarType({
+  name: 'Timestamp',
+  serialize(date) {
+    return (date instanceof Date) ? date.getTime() : null
+  },
+  parseValue(date) {
+    try           { return new Date(value); }
+    catch (error) { return null; }
+  },
+  parseLiteral(ast) {
+    if (ast.kind === Kind.INT) {
+      return new Date(parseInt(ast.value, 10));
+    }
+    else if (ast.kind === Kind.STRING) {
+      return this.parseValue(ast.value);
+    }
+    else {
+      return null;
+    }
+  },
+});
 
 const Db = require('./database');
 
@@ -139,7 +164,6 @@ const Chat = new GraphQLObjectType({
   }
 });
 
-
 const Message = new GraphQLObjectType({
   name: 'Message',
   description: 'An individual message',
@@ -164,7 +188,7 @@ const Message = new GraphQLObjectType({
         }
       },
       date: {
-        type: GraphQLString,
+        type: TimestampType,
         resolve (message) {
           return message.date;
         }
@@ -269,7 +293,7 @@ const Query = new GraphQLObjectType({
             type: GraphQLInt
           },
           date: {
-            type: GraphQLString
+            type: TimestampType
           },
           message: {
             type: GraphQLString
