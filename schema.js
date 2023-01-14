@@ -9,7 +9,9 @@ const {
   GraphQLScalarType 
 } = require('graphql');
 
-const Kind = require('graphql/language')
+const Db = require('./database/db');
+
+const Kind = require('graphql/language');
 
 const TimestampType = new GraphQLScalarType({
   name: 'Timestamp',
@@ -33,7 +35,6 @@ const TimestampType = new GraphQLScalarType({
   },
 });
 
-const Db = require('./database');
 
 const Job = new GraphQLObjectType({
   name: 'Job',
