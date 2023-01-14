@@ -1,6 +1,4 @@
 const {GraphQLSchema} = require('graphql');
-const Db = require('../database/db');
-const TimestampType = require('./types/timestamp');
 
 // We inject our types so that they can reference one another.
 const JobInject = require('./objects/job');

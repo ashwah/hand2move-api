@@ -3,6 +3,7 @@ const {
   GraphQLString,
   GraphQLInt,
 } = require('graphql');
+const Db = require('../database/db');
 
 const Mutation = (types) => new GraphQLObjectType({
   name: 'Mutation',

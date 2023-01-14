@@ -3,10 +3,7 @@ const {
   GraphQLString,
   GraphQLInt,
   GraphQLBoolean,
-  GraphQLSchema,
   GraphQLList,
-  GraphQLNonNull,
-  GraphQLScalarType 
 } = require('graphql');
 const TimestampType = require('./types/timestamp');
 const Db = require('../database/db');
