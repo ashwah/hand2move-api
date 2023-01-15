@@ -3,45 +3,53 @@ const _ = require('lodash')
 const Db = require('./db');
 
 Db.sync({ force: true }).then(()=> {
+  // Array to hold user IDs.
+  let user_ids = [];
   _.times(10, () => {
-    return Db.models.job.create({
-      user_id: faker.datatype.number(),
-    }).then(job => {
-      let n = faker.datatype.number({ min: 1, max: 2 });
-      _.times(n, () => {
-        return job.createWhat({
-          job_id: job.id,
-          length: faker.datatype.number(),
-          status: faker.color.human(),
-          width: faker.datatype.number(),
-          height: faker.datatype.number(),
-          weight: faker.datatype.number(),
-          is_fragile: faker.datatype.boolean(),
-          is_temperature_sensitive: faker.datatype.boolean(),
-        }); 
-      })
-    });
-  });
-
-  _.times(6, () => {
-    return Db.models.chat.create({
-      user_chat_id: faker.datatype.number({ min: 1, max: 100 }),
-    }).then(chat => {
-      return Db.models.user.create({
-        name: faker.name.fullName(),
-      }).then(user1 => {
-        return Db.models.user.create({
-          name: faker.name.fullName(),
-        }).then(user2 => {
-          let m = faker.datatype.number({ min:50, max: 100 })
-          _.times(m, () => {
-            Db.models.message.create({
-              chat_id: chat.id,
-              chatId: chat.id,
-              user_id: Math.random() < 0.5 ? user1.id : user2.id,
-              message: faker.science.chemicalElement().name,
-              date: faker.datatype.number({ min: 1641759318000, max: 1673295343000 }),
-            });
+    return Db.models.user.create({
+      name: faker.name.fullName(),
+    }).then(user => {
+      // Add the user ID to the array.
+      user_ids.push(user.id);
+      return Db.models.chat.create({
+        user_chat_id: faker.datatype.number({ min: 1, max: 100 }),
+      }).then(chat => {
+        // Make a random number of messages.
+        let m = faker.datatype.number({ min:50, max: 100 })
+        // Pick two random user IDs.
+        var user_id1 = user_ids[Math.floor(Math.random()*user_ids.length)];
+        var user_id2 = user_ids[Math.floor(Math.random()*user_ids.length)];
+        _.times(m, () => {
+          Db.models.message.create({
+            chat_id: chat.id,
+            user_id: Math.random() < 0.5 ? user_id1 : user_id2,
+            message: faker.science.chemicalElement().name,
+            date: faker.datatype.number({ min: 1641759318000, max: 1673295343000 }),
+          });
+        });
+      }).then(() => {
+        _.times(10, () => {
+          // Get a random status from this array.
+          let statuses = ['New', 'Awaiting payment', 'Active', 'Complete', 'Cancelled'];
+          var status = statuses[Math.floor(Math.random()*statuses.length)];
+          return Db.models.job.create({
+            user_id: user.id,
+            status: status,
+          }).then(job => {
+            // Add a random number of 'whats' to this job.
+            let n = faker.datatype.number({ min: 1, max: 2 });
+            _.times(n, () => {
+              return job.createWhat({
+                job_id: job.id,
+                length: faker.datatype.number(),
+                status: faker.color.human(),
+                width: faker.datatype.number(),
+                height: faker.datatype.number(),
+                weight: faker.datatype.number(),
+                is_fragile: faker.datatype.boolean(),
+                is_temperature_sensitive: faker.datatype.boolean(),
+              });
+            })
           });
         });
       });
