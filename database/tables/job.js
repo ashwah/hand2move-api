@@ -16,6 +16,9 @@ const def = {
   price: {
     type: Sequelize.DECIMAL
   },
+  date: {
+    type: Sequelize.DATE
+  },
 };
 
 const options = { 

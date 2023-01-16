@@ -25,6 +25,9 @@ const Query = (types) => new GraphQLObjectType({
           status: {
             type: GraphQLString
           },
+          date: {
+            type: TimestampType
+          },
         },
         resolve (root, args) {
           return Db.models.job.findAll({ where: args });

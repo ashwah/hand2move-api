@@ -35,7 +35,8 @@ Db.sync({ force: true }).then(()=> {
         Db.models.job.create({
           user_id: user.id,
           status: status,
-          price: faker.datatype.float({min: 1.00, max: 50.00, precision: 0.01})
+          price: faker.datatype.float({min: 1.00, max: 50.00, precision: 0.01}),
+          date: faker.datatype.number({ min: 1641759318000, max: 1673295343000 }),
         }).then(job => {
           // Add a random number of 'whats' to this job.
           let n = faker.datatype.number({ min: 1, max: 2 });

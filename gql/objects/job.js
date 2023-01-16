@@ -5,6 +5,7 @@ const {
   GraphQLList,
   GraphQLFloat,
 } = require('graphql');
+const TimestampType = require('../types/timestamp');
 
 const Job = (types) => new GraphQLObjectType({
   name: 'Job',
@@ -33,6 +34,12 @@ const Job = (types) => new GraphQLObjectType({
         type: GraphQLFloat,
         resolve (job) {
           return job.price;
+        }
+      },
+      date: {
+        type: TimestampType,
+        resolve (job) {
+          return job.date;
         }
       },
       whats: {
