@@ -27,7 +27,19 @@ const User = (types) => new GraphQLObjectType({
         resolve (user) {
           return user.last_name;
         }
-      }
+      },
+      jobs: {
+        type: GraphQLList(types.Job),
+        resolve (user) {
+          return user.getJobs();
+        }
+      },
+      messages: {
+        type: GraphQLList(types.Message),
+        resolve (user) {
+          return user.getMessages();
+        }
+      },
     };
   }
 });

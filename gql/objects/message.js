@@ -45,7 +45,13 @@ const Message = (types) => new GraphQLObjectType({
         resolve (message) {
           return message.getChat()
         }
-      }
+      },
+      user: {
+        type: types.User,
+        resolve (message) {
+          return message.getUser()
+        }
+      },
     };
   }
 });
