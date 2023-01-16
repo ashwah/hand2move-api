@@ -6,12 +6,13 @@ Db.sync({ force: true }).then(()=> {
   // Array to hold user IDs.
   let user_ids = [];
   _.times(10, () => {
-    return Db.models.user.create({
-      name: faker.name.fullName(),
+    Db.models.user.create({
+      first_name: faker.name.firstName(),
+      last_name: faker.name.lastName(),
     }).then(user => {
       // Add the user ID to the array.
       user_ids.push(user.id);
-      return Db.models.chat.create({
+      Db.models.chat.create({
         user_chat_id: faker.datatype.number({ min: 1, max: 100 }),
       }).then(chat => {
         // Make a random number of messages.
@@ -28,29 +29,28 @@ Db.sync({ force: true }).then(()=> {
           });
         });
       }).then(() => {
-        _.times(10, () => {
-          // Get a random status from this array.
-          let statuses = ['New', 'Awaiting payment', 'Active', 'Complete', 'Cancelled'];
-          var status = statuses[Math.floor(Math.random()*statuses.length)];
-          return Db.models.job.create({
-            user_id: user.id,
-            status: status,
-          }).then(job => {
-            // Add a random number of 'whats' to this job.
-            let n = faker.datatype.number({ min: 1, max: 2 });
-            _.times(n, () => {
-              return job.createWhat({
-                job_id: job.id,
-                length: faker.datatype.number(),
-                status: faker.color.human(),
-                width: faker.datatype.number(),
-                height: faker.datatype.number(),
-                weight: faker.datatype.number(),
-                is_fragile: faker.datatype.boolean(),
-                is_temperature_sensitive: faker.datatype.boolean(),
-              });
-            })
-          });
+        // Get a random status from this array.
+        let statuses = ['New', 'Awaiting payment', 'Active', 'Complete', 'Cancelled'];
+        var status = statuses[Math.floor(Math.random()*statuses.length)];
+        Db.models.job.create({
+          user_id: user.id,
+          status: status,
+          price: faker.datatype.float({min: 1.00, max: 50.00, precision: 0.01})
+        }).then(job => {
+          // Add a random number of 'whats' to this job.
+          let n = faker.datatype.number({ min: 1, max: 2 });
+          _.times(n, () => {
+            job.createWhat({
+              job_id: job.id,
+              length: faker.datatype.number(),
+              status: faker.color.human(),
+              width: faker.datatype.number(),
+              height: faker.datatype.number(),
+              weight: faker.datatype.number(),
+              is_fragile: faker.datatype.boolean(),
+              is_temperature_sensitive: faker.datatype.boolean(),
+            });
+          })
         });
       });
     });

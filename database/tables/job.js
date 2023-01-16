@@ -12,7 +12,10 @@ const def = {
   },
   status: {
     type: Sequelize.STRING
-  }
+  },
+  price: {
+    type: Sequelize.DECIMAL
+  },
 };
 
 const options = { 

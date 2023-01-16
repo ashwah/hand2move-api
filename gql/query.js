@@ -102,6 +102,23 @@ const Query = (types) => new GraphQLObjectType({
           return Db.models.message.findAll({ where: args });
         }
       },
+      user: {
+        type: new GraphQLList(types.User),
+        args: {
+          id: {
+            type: GraphQLInt
+          },
+          first_name: {
+            type: GraphQLString
+          },
+          last_name: {
+            type: GraphQLString
+          },
+        },
+        resolve (root, args) {
+          return Db.models.user.findAll({ where: args });
+        }
+      },
     };
   }
 })

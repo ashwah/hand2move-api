@@ -3,6 +3,7 @@ const {
   GraphQLString,
   GraphQLInt,
   GraphQLList,
+  GraphQLFloat,
 } = require('graphql');
 
 const Job = (types) => new GraphQLObjectType({
@@ -28,12 +29,24 @@ const Job = (types) => new GraphQLObjectType({
           return job.status;
         }
       },
+      price: {
+        type: GraphQLFloat,
+        resolve (job) {
+          return job.price;
+        }
+      },
       whats: {
         type: GraphQLList(types.What),
         resolve (job) {
           return job.getWhats();
         }
-      }   
+      },
+      user: {
+        type: types.User,
+        resolve (job) {
+          return job.getUser();
+        }
+      },
     };
   }
 });

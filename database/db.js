@@ -12,10 +12,13 @@ const Message = require('./tables/message')(Conn)
 Job.hasMany(What);
 What.belongsTo(Job);
 
+Chat.hasMany(Message);
+Message.belongsTo(Chat);
+
 User.hasMany(Message);
 Message.belongsTo(User);
 
-Chat.hasMany(Message);
-Message.belongsTo(Chat);
+User.hasMany(Job);
+Job.belongsTo(User);
 
 module.exports = Conn;

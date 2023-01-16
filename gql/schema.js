@@ -5,6 +5,7 @@ const JobInject = require('./objects/job');
 const WhatInject = require('./objects/what');
 const ChatInject = require('./objects/chat');
 const MessageInject = require('./objects/message');
+const UserInject = require('./objects/user');
 const QueryInject = require('./query');
 const MutationInject = require('./mutation');
 
@@ -13,6 +14,7 @@ types.Job = JobInject(types);
 types.What = WhatInject(types);
 types.Chat = ChatInject(types);
 types.Message = MessageInject(types);
+types.User = UserInject(types);
 types.Query = QueryInject(types);
 types.Mutation = MutationInject(types);
 
